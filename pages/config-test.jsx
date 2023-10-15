@@ -172,10 +172,8 @@ function AdditionalInfo() {
   const placeholders = ["학교급 선택", "학년/학기 선택", "교과서 출판사"];
   return (
     <>
-      {" "}
-      <ProgressBar progress={3} />{" "}
+      <ProgressBar progress={3} />
       <h1 className="mb-2 text-5xl text-blue-600 tracking-tight font-bold font-mono">
-        {" "}
         추가적인 정보를 입력해주세요
       </h1>
       <p className="mb-4 text-2xl text-indigo-400 tracking-tight font-semibold font-mono">
