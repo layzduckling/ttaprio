@@ -29,6 +29,7 @@ function Logo() {
 }
 
 function ProgressBar({ progress }) {
+  // Progress bar components. There are 3 in total
   let bars = [];
 
   for (let i = 1; i <= 3; i++) {
@@ -130,6 +131,7 @@ function Dropdowns({ options, placeholders }) {
   for (let i = 0; i < options.length; i++) {
     const placeholder = placeholders[i];
 
+    // TODO improve algorithm
     const handleSelect = (e) => {
       if (placeholder == "학교급 선택") {
         configurations.current["schooltype"] = e.label;

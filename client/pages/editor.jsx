@@ -22,10 +22,11 @@ function Logo() {
 }
 
 function EditorContainer() {
-  const [selected, setSelected] = useState("");
-  const [response, setResponse] = useState("");
+  const [selected, setSelected] = useState(""); // the text selected
+  const [response, setResponse] = useState(""); // the response from the AI
 
   const handleSelection = (range, source, editor) => {
+    // Check whether the user made a selection
     if (source === "user") {
       const text = editor.getText();
       const selectRange = editor.getSelection();
@@ -39,6 +40,7 @@ function EditorContainer() {
   };
 
   const improveSelected = async () => {
+    // Check whether selected is empty or not
     if (selected) {
       await fetch("http://localhost:8080/api/improve", {
         method: "POST",
