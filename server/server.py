@@ -13,7 +13,23 @@ def config_test():
         print(instruction)
         return "Success"
 
-    return "Failed"
+    return "Not allowed", 405
+
+@app.route("/api/improve", methods=["POST", "GET"])
+def improve_text():
+    global requested_text
+
+    if request.method == "POST":
+        body = request.get_json()
+        requested_text = body["text"]
+        
+        return "OK", 200
+    elif request.method == "GET":
+        return f"Requested: {requested_text}"
+
+    return "Not allowed", 405 
+
+requested_text = ""
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080) # dev mode
