@@ -15,7 +15,7 @@ async def fetch_ai_response():
     global instruction, requested_text
 
     req = {
-        "prompt": requested_text,
+        "prompt": f"{instruction}\n\"{requested_text}\"를 개선해줘.",
         "max_new_tokens": 250,
         "auto_max_new_tokens": False,
         "max_tokens_second": 0,
