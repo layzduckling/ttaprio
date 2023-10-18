@@ -5,7 +5,11 @@ import asyncio
 import json
 import websockets
 
-URI = "wss://each-xi-midi-laos.trycloudflare.com/api/v1/stream"
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+URI = os.environ.get("URI") 
 
 # app instance
 app = Flask(__name__)
@@ -17,7 +21,7 @@ async def fetch_ai_response():
     req = {
         "prompt": f"{instruction}\n\"{requested_text}\"를 개선해줘.",
         "max_new_tokens": 250,
-        "auto_max_new_tokens": False,
+        "auto_max_new_tokens": True,
         "max_tokens_second": 0,
                 
         "preset": "None",
@@ -25,7 +29,7 @@ async def fetch_ai_response():
         "temperature": 0.7,
         "top_p": 0.1,
         "typical_p": 1,
-        "epsilon_cuttoff": 0,
+        "epsilon_cutoff": 0,
         "eta_cutoff": 0,
         "tfs": 1,
         "top_a": 0,
