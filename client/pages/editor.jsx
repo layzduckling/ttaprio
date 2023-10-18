@@ -50,6 +50,8 @@ function EditorContainer() {
         },
       });
 
+      setResponse("따플이가 생각중이에요...");
+
       const res = await fetch("http://localhost:8080/api/improve");
       setResponse(await res.text());
     }
@@ -61,14 +63,14 @@ function EditorContainer() {
         <div className="w-2/3 p-4 rounded-xl bg-[#0f1c41]">
           <ReactQuill
             modules={editorModules}
-            className="h-[calc(100%-44px)] rounded-xl bg-orange-50"
+            className="ql h-[calc(100%-44px)]"
             onChangeSelection={handleSelection}
           />
         </div>
         <div className="w-1/3 p-4 rounded-xl bg-[#0f1c41]">
           <div className="flex flex-col gap-2 p-4 h-full rounded-xl bg-orange-50">
             <div className="flex h-1/6 gap-2 text-xl text-center text-white ">
-              <div className="flex justify-center items-center w-2/3 p-1 text-center bg-[#0f1c41] rounded-xl">
+              <div className="flex justify-center items-center w-2/3 p-2 text-center bg-[#0f1c41] rounded-xl">
                 <h2>{selected}</h2>
               </div>
               <button
@@ -80,8 +82,8 @@ function EditorContainer() {
                 고치기
               </button>
             </div>
-            <div className="p-4 h-5/6 rounded-xl text-xl text-center text-white bg-[#0f1c41]">
-              <p>{response}</p>
+            <div className="p-4 h-5/6 rounded-xl text-xl text-white bg-[#0f1c41] overflow-scroll">
+              <p className="whitespace-pre-line">{response}</p>
             </div>
           </div>
         </div>
