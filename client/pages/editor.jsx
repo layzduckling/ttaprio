@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
+
+import io from "socket.io-client";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const editorModules = {
@@ -24,6 +26,21 @@ function Logo() {
 function EditorContainer() {
   const [selected, setSelected] = useState(""); // the text selected
   const [response, setResponse] = useState(""); // the response from the AI
+  const loadingResponse = useRef(0);
+
+  const socket = io("http://localhost:8080");
+  useEffect(() => {
+    socket.on("message", (message) => {
+      if (loadingResponse.current) {
+        console.log("Fell here");
+        loadingResponse.current = 0;
+        setResponse(message);
+      } else {
+        console.log("nah here");
+        setResponse((response) => response + message);
+      }
+    });
+  });
 
   const handleSelection = (range, source, editor) => {
     // Check whether the user made a selection
@@ -50,10 +67,10 @@ function EditorContainer() {
         },
       });
 
-      setResponse("따플이가 생각중이에요...");
+      setResponse("따플이가 생각 중이에요...");
+      loadingResponse.current = 1;
 
-      const res = await fetch("http://localhost:8080/api/improve");
-      setResponse(await res.text());
+      socket.emit("improve");
     }
   };
 

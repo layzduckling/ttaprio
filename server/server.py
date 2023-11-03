@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
+from flask_socketio import SocketIO, send
 from flask_cors import CORS
 
 import asyncio
@@ -16,6 +17,7 @@ logging.getLogger().setLevel("INFO")
 
 # app instance
 app = Flask(__name__)
+socketio = SocketIO(app, cors_allowed_origins='*')
 CORS(app)
 
 async def fetch_ai_response():
@@ -64,18 +66,15 @@ async def fetch_ai_response():
     async with websockets.connect(URI, ping_interval=None) as websocket:
         await websocket.send(json.dumps(req))
 
-        response = ""
-
         while True:
-            incoming_data = await websocket.recv()
-            incoming_data = json.loads(incoming_data)
+            incoming_data = json.loads(await websocket.recv())
 
             match incoming_data["event"]:
                 case "text_stream":
-                    response += incoming_data["text"]
+                    yield incoming_data["text"]
+                    print(incoming_data["text"], end="") # TODO: Change logging terminator
                 case "stream_end":
-                    logging.info(response)
-                    return response
+                    return 
 
 @app.route("/api/config-test", methods=["POST"])
 def config_test():
@@ -83,7 +82,6 @@ def config_test():
         global instruction
 
         configurations = request.get_json()
-
         instruction = f"나는 {configurations['publisher']} 교과서를 쓰는 {configurations['schooltype']} {configurations['semester']} 학생이야. 곧 {configurations['subject']} {configurations['title']} 수행평가를 봐야 하는데, {configurations['rubric']}에 따라서 채점 돼. 수행평가 형식은 {configurations['format']}이야."
 
         logging.info(instruction)
@@ -92,7 +90,7 @@ def config_test():
 
     return "Not allowed", 405
 
-@app.route("/api/improve", methods=["POST", "GET"])
+@app.route("/api/improve", methods=["POST"])
 def improve_text():
     global requested_text
 
@@ -101,14 +99,21 @@ def improve_text():
         requested_text = body["text"]
         
         return "OK", 200
-    elif request.method == "GET":
-        response = asyncio.run(fetch_ai_response())
-        return response 
-
+    
     return "Not allowed", 405 
+
+@socketio.on("improve")
+def handle_improve():
+    logging.info("connected")
+
+    async def fetch_response():
+         async for response in fetch_ai_response():
+            send(response)
+        
+    asyncio.run(fetch_response())
 
 instruction = ""
 requested_text = ""
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8080) # dev mode
+    socketio.run(app, debug=True, port=8080) # dev mode
