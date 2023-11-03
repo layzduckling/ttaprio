@@ -3,6 +3,7 @@ from flask_cors import CORS
 
 import asyncio
 import json
+import logging
 import websockets
 
 from dotenv import load_dotenv
@@ -10,6 +11,8 @@ import os
 
 load_dotenv()
 URI = os.environ.get("URI") 
+
+logging.getLogger().setLevel("INFO")
 
 # app instance
 app = Flask(__name__)
@@ -71,6 +74,7 @@ async def fetch_ai_response():
                 case "text_stream":
                     response += incoming_data["text"]
                 case "stream_end":
+                    logging.info(response)
                     return response
 
 @app.route("/api/config-test", methods=["POST"])
@@ -79,8 +83,11 @@ def config_test():
         global instruction
 
         configurations = request.get_json()
+
         instruction = f"나는 {configurations['publisher']} 교과서를 쓰는 {configurations['schooltype']} {configurations['semester']} 학생이야. 곧 {configurations['subject']} {configurations['title']} 수행평가를 봐야 하는데, {configurations['rubric']}에 따라서 채점 돼. 수행평가 형식은 {configurations['format']}이야."
-        print(instruction)
+
+        logging.info(instruction)
+
         return "Success"
 
     return "Not allowed", 405
