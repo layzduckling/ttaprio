@@ -18,11 +18,11 @@ function SelectionTry() {
       className="flex flex-col p-12 pr-[40%] justify-center h-full text-blue-600 bg-cyan-200"
       style={{ clipPath: "polygon(0 0, 100% 0, 75% 100%, 0 100%)" }}
     >
-      <h2 className="p-2 pt-8 my-8 text-7xl font-extrabold whitespace-nowrap leading-snug font-mono">
+      <h2 className="p-2 pt-8 my-8 text-7xl font-extrabold whitespace-nowrap leading-snug">
         무.작.정. <br />
         따라해보기
       </h2>
-      <p className="text-2xl p-2 font-semibold tracking-tight font-mono">
+      <p className="text-2xl p-2 font-semibold tracking-tight">
         30초 안에 수행평가 유형 클릭하고 과제물 제작
       </p>
       <Link href="config-test" className="p-2 -mt-4">
@@ -41,10 +41,10 @@ function SelectionStart() {
       <Link href="config-test " className="p-2 -mb-4 self-end">
         <Image src="/images/LightBlueSelectbox.svg" height={256} width={256} />
       </Link>
-      <p className="text-2xl p-2 font-semibold tracking-tight font-mono">
+      <p className="text-2xl p-2 font-semibold tracking-tight">
         AI 활용부터 심화까지, 오직 중고생 과제에 특화된 요점정리
       </p>
-      <h2 className="p-2 my-8 text-7xl font-extrabold whitespace-nowrap leading-snug font-mono">
+      <h2 className="p-2 my-8 text-7xl font-extrabold whitespace-nowrap leading-snug">
         처음부터
         <br />
         시작해보기

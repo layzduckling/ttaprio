@@ -3,7 +3,28 @@ import Link from "next/link";
 import Image from "next/image";
 import Select from "react-select";
 
+import { useTransition, animated } from "@react-spring/web";
+
+import Logo from "../components/Logo";
+
 const Context = createContext();
+
+function addTransition(component) {
+  const transitions = useTransition([0], {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    config: { friction: 80 },
+  });
+
+  return transitions((styles, item) => (
+    <animated.div
+      className="flex flex-col items-center justify-center h-full"
+      style={styles}
+    >
+      {component}
+    </animated.div>
+  ));
+}
 
 function updateConfigProgress(
   configurations,
@@ -14,18 +35,6 @@ function updateConfigProgress(
 ) {
   configurations.current[key] = value;
   setProgress(progress + 1);
-}
-
-function Logo() {
-  return (
-    <div className="absolute w-screen h-[64px] bg-[#0f1c41]">
-      <div className="ml-4 w-[216px] flex justify-center">
-        <div className="absolute top-[16px] text-3xl text-white font-bold">
-          <h1>&lt;ttapr.io&gt;</h1>
-        </div>
-      </div>
-    </div>
-  );
 }
 
 function ProgressBar({ progress }) {
@@ -76,7 +85,7 @@ function Selection({ selectionText, long = false }) {
       >
         <div className="relative flex max-w-fit justify-center items-center">
           <Image src="/images/SubjectSelectBox.svg" height={124} width={124} />
-          <p className="absolute top-[12px] text-white text-xl font-mono font-bold">
+          <p className="absolute top-[12px] text-white text-xl font-bold">
             {selectionText}
           </p>
         </div>
@@ -97,7 +106,7 @@ function Selection({ selectionText, long = false }) {
       >
         <div className="relative flex max-w-fit justify-center items-center">
           <Image src="/images/SubjectSelectBox.svg" height={124} width={124} />
-          <p className="absolute top-[8px] text-white text-2xl font-mono font-bold">
+          <p className="absolute top-[8px] text-white text-2xl font-bold">
             {selectionText}
           </p>
         </div>
@@ -159,13 +168,13 @@ function Dropdowns({ options, placeholders }) {
 }
 
 function SelectSubject() {
-  return (
+  return addTransition(
     <>
       <ProgressBar progress={1} />
-      <h1 className="mb-2 text-5xl text-blue-600 tracking-tight font-bold font-mono">
+      <h1 className="mb-2 text-5xl text-blue-600 tracking-tight font-bold">
         수행평가 과목이 무엇입니까?
       </h1>
-      <p className="mb-4 text-2xl text-indigo-400 tracking-tight font-semibold font-mono">
+      <p className="mb-4 text-2xl text-indigo-400 tracking-tight font-semibold">
         따플이가 자료를 준비할 수 있게 도와주세요
       </p>
       <SelectionList
@@ -185,13 +194,13 @@ function SelectSubject() {
 }
 
 function SelectType() {
-  return (
+  return addTransition(
     <>
       <ProgressBar progress={2} />
-      <h1 className="mb-2 text-5xl text-blue-600 tracking-tight font-bold font-mono">
+      <h1 className="mb-2 text-5xl text-blue-600 tracking-tight font-bold">
         수행평가 형식이 무엇입니까?
       </h1>
-      <p className="mb-4 text-2xl text-indigo-400 tracking-tight font-semibold font-mono">
+      <p className="mb-4 text-2xl text-indigo-400 tracking-tight font-semibold">
         따플이가 마음의 준비를 할 수 있게 도와주세요.
       </p>
       <SelectionList
@@ -243,13 +252,13 @@ function AdditionalInfo() {
     });
   };
 
-  return (
+  return addTransition(
     <>
       <ProgressBar progress={3} />
-      <h1 className="mb-2 text-5xl text-blue-600 tracking-tight font-bold font-mono">
+      <h1 className="mb-2 text-5xl text-blue-600 tracking-tight font-bold">
         추가적인 정보를 입력해주세요
       </h1>
-      <p className="mb-4 text-2xl text-indigo-400 tracking-tight font-semibold font-mono">
+      <p className="mb-4 text-2xl text-indigo-400 tracking-tight font-semibold">
         따플이가 정확히 대비할 수 있게 도와주세요
       </p>
       <div className="flex gap-4">
@@ -260,13 +269,13 @@ function AdditionalInfo() {
         <div className="flex flex-col mb-4 gap-4 w-4/5 max-w-[200px] p-4 rounded-xl bg-[#0f1c41]">
           <input
             name="title"
-            className="px-2 h-[39px] text-base rounded-xl font-mono"
+            className="px-2 h-[39px] text-base rounded-xl"
             placeholder="수행평가 제목"
             ref={title}
           />
           <input
             name="rubric"
-            className="px-2 h-[39px] text-base rounded-xl font-mono"
+            className="px-2 h-[39px] text-base rounded-xl"
             placeholder="성취 기준"
             ref={rubric}
           />
@@ -285,7 +294,7 @@ function AdditionalInfo() {
 
 function Configure() {
   const [progress, setProgress] = useState(1);
-  const configScreens = [<SelectSubject />, <SelectType />, <AdditionalInfo />];
+  const screens = [<SelectSubject />, <SelectType />, <AdditionalInfo />];
   const configurations = useRef({
     subject: "",
     format: "",
@@ -297,9 +306,9 @@ function Configure() {
   });
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen pt-[72px] bg-cyan-200 z-0">
+    <div className="h-screen pt-[72px] bg-cyan-200 z-0">
       <Context.Provider value={{ progress, setProgress, configurations }}>
-        {configScreens[progress - 1]}
+        {screens[progress - 1]}
       </Context.Provider>
     </div>
   );
