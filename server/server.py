@@ -86,10 +86,11 @@ async def fetch_ai_response(prompt):
 @app.route("/api/config-test", methods=["POST"])
 def config_test():
     if request.method == "POST":
-        global instruction
+        global instruction, rubric
 
         configurations = request.get_json()
-        instruction = f"나는 {configurations['schooltype']} {configurations['semester']} 학생이야. 곧 {configurations['subject']} {configurations['title']} 수행평가를 봐야 하는데, {configurations['rubric']}에 따라서 채점 돼. 수행평가 형식은 {configurations['format']}이야."
+        rubric = configurations['rubric']
+        instruction = f"나는 {configurations['schooltype']} {configurations['semester']} 학생이야. 곧 {configurations['subject']} {configurations['title']} 수행평가를 봐야 하는데, {rubric}에 따라서 채점 돼. 수행평가 형식은 {configurations['format']}이야."
 
         logging.info(instruction)
 
@@ -113,8 +114,7 @@ def handle_eval(data):
     request = f"""
     지금부터 글을 평가기준에 대해 평가해주면 돼. 답은 A,B,C,D,E 중 하나로 답해줘. 아래 평가기준이랑 본문을 보내줄꺼야.
 
-평가기준 : 국어 - 듣기·말하기 ([10국01-01]): 개인이나 집단에 따라 듣기와 말하기의 방법이 다양함을 이해하고 듣기·말하기 활동을 한다.
-
+평가기준 : {rubric} 
 본문 : {text}
 
 글을 평가하고 답을 A,B,C,D,E 중 하나를 선택해서 한 글자로 답해줘. 그리고 아래에 이유를 써줘. 
@@ -137,6 +137,7 @@ def handle_eval(data):
 
 
 instruction = ""
+rubric = ""
 
 if __name__ == "__main__":
     socketio.run(app, debug=True, port=8080) # dev mode
