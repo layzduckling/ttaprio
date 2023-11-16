@@ -1,11 +1,11 @@
 .ql > .ql-container {
-  background-color: #fff7ed;
+  background-color: #f1f6f9;
   border-bottom-left-radius: 0.75rem;
   border-bottom-right-radius: 0.75rem;
 }
 
 .ql > .ql-toolbar {
-  background-color: #fff7ed;
+  background-color: #f1f6f9;
   border-top-left-radius: 0.75rem;
   border-top-right-radius: 0.75rem;
 }

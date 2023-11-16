@@ -1,5 +1,5 @@
-from flask import Flask, request
-from flask_socketio import SocketIO, send
+from flask import Flask, request, jsonify
+from flask_socketio import SocketIO, send, emit
 from flask_cors import CORS
 
 import asyncio
@@ -7,24 +7,29 @@ import json
 import logging
 import websockets
 
+from openai import OpenAI
+
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 URI = os.environ.get("URI") 
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
 logging.getLogger().setLevel("INFO")
+
+gpt_client = OpenAI(
+    api_key=OPENAI_API_KEY
+)
 
 # app instance
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins='*')
 CORS(app)
 
-async def fetch_ai_response():
-    global instruction, requested_text
-
+async def fetch_ai_response(prompt):
     req = {
-        "prompt": f"{instruction}\n\"{requested_text}\"를 개선해줘.",
+        "prompt": prompt,
         "max_new_tokens": 250,
         "auto_max_new_tokens": True,
         "max_tokens_second": 0,
@@ -66,15 +71,17 @@ async def fetch_ai_response():
     async with websockets.connect(URI, ping_interval=None) as websocket:
         await websocket.send(json.dumps(req))
 
+        response = ""
+
         while True:
             incoming_data = json.loads(await websocket.recv())
 
             match incoming_data["event"]:
                 case "text_stream":
-                    yield incoming_data["text"]
-                    print(incoming_data["text"], end="") # TODO: Change logging terminator
+                    response += incoming_data["text"]
                 case "stream_end":
-                    return 
+                    logging.info(response)
+                    return response
 
 @app.route("/api/config-test", methods=["POST"])
 def config_test():
@@ -82,7 +89,7 @@ def config_test():
         global instruction
 
         configurations = request.get_json()
-        instruction = f"나는 {configurations['publisher']} 교과서를 쓰는 {configurations['schooltype']} {configurations['semester']} 학생이야. 곧 {configurations['subject']} {configurations['title']} 수행평가를 봐야 하는데, {configurations['rubric']}에 따라서 채점 돼. 수행평가 형식은 {configurations['format']}이야."
+        instruction = f"나는 {configurations['schooltype']} {configurations['semester']} 학생이야. 곧 {configurations['subject']} {configurations['title']} 수행평가를 봐야 하는데, {configurations['rubric']}에 따라서 채점 돼. 수행평가 형식은 {configurations['format']}이야."
 
         logging.info(instruction)
 
@@ -90,30 +97,46 @@ def config_test():
 
     return "Not allowed", 405
 
-@app.route("/api/improve", methods=["POST"])
-def improve_text():
-    global requested_text
-
-    if request.method == "POST":
-        body = request.get_json()
-        requested_text = body["text"]
-        
-        return "OK", 200
+@socketio.on("tutorReq")
+def handle_improve(data):
+    logging.info("Connected")
+    response = asyncio.run(fetch_ai_response(instruction + data))
     
-    return "Not allowed", 405 
+    emit("tutorRes", response)
 
-@socketio.on("improve")
-def handle_improve():
-    logging.info("connected")
 
-    async def fetch_response():
-         async for response in fetch_ai_response():
-            send(response)
-        
-    asyncio.run(fetch_response())
+@socketio.on("evaluationReq")
+def handle_eval(data):
+    logging.info("Connected")
+    text = data
+
+    request = f"""
+    지금부터 글을 평가기준에 대해 평가해주면 돼. 답은 A,B,C,D,E 중 하나로 답해줘. 아래 평가기준이랑 본문을 보내줄꺼야.
+
+평가기준 : 국어 - 듣기·말하기 ([10국01-01]): 개인이나 집단에 따라 듣기와 말하기의 방법이 다양함을 이해하고 듣기·말하기 활동을 한다.
+
+본문 : {text}
+
+글을 평가하고 답을 A,B,C,D,E 중 하나를 선택해서 한 글자로 답해줘. 그리고 아래에 이유를 써줘. 
+참고) 매우 잘했으면 A, 잘했지만 길이가 짧거나 본문에서 충족하지 않는 부분이 있으면 B, 전체적으로 잘하지 못하면 C, 글의 질이 나쁘고 길이나 매우 짧거나 성의가 보이지 않으면 D, 공백이 오면 E를 줘.
+    """
+
+    response = gpt_client.chat.completions.create(
+        messages=[{
+            "role": "user",
+            "content": request,
+        }],
+        model="gpt-4",
+    )
+
+    response_processed = response.choices[0].message.content.split("\n")
+    grade, reason = [i for i in response_processed if i != '']  # GPT might add more than one enter between the grade and the reason
+    grade = ''.join([i for i in grade if i.isalpha() and i.isascii()])  # Filter grade to only display the grade value
+
+    emit("evaluationRes", {"grade": grade, "reason": reason})
+
 
 instruction = ""
-requested_text = ""
 
 if __name__ == "__main__":
     socketio.run(app, debug=True, port=8080) # dev mode

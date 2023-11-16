@@ -4,12 +4,15 @@
     "build": "next build"
   },
   "dependencies": {
-    "@react-spring/web": "^9.7.3",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/base": "^5.0.0-beta.24",
+    "@mui/icons-material": "^5.14.18",
+    "@mui/material": "^5.14.17",
     "next": "^13.4.19",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-quill": "^2.0.0",
-    "react-select": "^5.7.4",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
     "vercel": "^32.2.4"

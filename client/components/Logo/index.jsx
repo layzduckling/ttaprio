@@ -1,10 +1,8 @@
 export default function Logo() {
   return (
-    <div className="absolute w-screen h-[64px] bg-[#0f1c41]">
-      <div className="ml-4 w-[216px] flex justify-center">
-        <div className="absolute top-[16px] text-3xl text-white font-bold">
-          <h1>&lt;ttapr.io&gt;</h1>
-        </div>
+    <div className="relative flex items-center w-screen h-[48px] bg-[#212A3E] z-50">
+      <div className="absolute left-6 text-2xl text-[#F1F6F9] font-bold">
+        <h1>&lt;ttapr.io&gt;</h1>
       </div>
     </div>
   );

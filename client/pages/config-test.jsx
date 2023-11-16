@@ -1,30 +1,10 @@
 import React, { createContext, useState, useRef, useContext } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import Select from "react-select";
-
-import { useTransition, animated } from "@react-spring/web";
 
 import Logo from "../components/Logo";
+import { Input, Select as Dropdown, Option } from "../components/CoreUI";
 
 const Context = createContext();
-
-function addTransition(component) {
-  const transitions = useTransition([0], {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    config: { friction: 80 },
-  });
-
-  return transitions((styles, item) => (
-    <animated.div
-      className="flex flex-col items-center justify-center h-full"
-      style={styles}
-    >
-      {component}
-    </animated.div>
-  ));
-}
 
 function updateConfigProgress(
   configurations,
@@ -37,27 +17,37 @@ function updateConfigProgress(
   setProgress(progress + 1);
 }
 
+function Header({ ...props }) {
+  return (
+    <h1
+      {...props}
+      className="text-5xl color-cool-white tracking-tight font-bold"
+    ></h1>
+  );
+}
+
+function SubHeader({ ...props }) {
+  return (
+    <h2
+      {...props}
+      className="text-2xl color-grey tracking-tight font-semibold"
+    ></h2>
+  );
+}
+
 function ProgressBar({ progress }) {
   // Progress bar components. There are 3 in total
   let bars = [];
 
   for (let i = 1; i <= 3; i++) {
     if (i === progress) {
-      bars.push(
-        <div className="mx-4">
-          <Image src="/images/BlueProgressbar.svg" width={148} height={148} />
-        </div>
-      );
+      bars.push(<div className="w-36 h-3 mx-4 rounded-xl bg-slate-900"></div>);
     } else {
-      bars.push(
-        <div className="-mx-6">
-          <Image src="/images/PurpleProgressbar.svg" width={148} height={148} />
-        </div>
-      );
+      bars.push(<div className="w-16 h-3 mx-2 rounded-xl bg-dark"></div>);
     }
   }
 
-  return <div className="flex">{bars}</div>;
+  return <div className="flex m-4">{bars}</div>;
 }
 
 function Selection({ selectionText, long = false }) {
@@ -70,49 +60,23 @@ function Selection({ selectionText, long = false }) {
     key = "format";
   }
 
-  if (long) {
-    return (
-      <button
-        onClick={() =>
-          updateConfigProgress(
-            configurations,
-            key,
-            selectionText,
-            progress,
-            setProgress
-          )
-        }
-      >
-        <div className="relative flex max-w-fit justify-center items-center">
-          <Image src="/images/SubjectSelectBox.svg" height={124} width={124} />
-          <p className="absolute top-[12px] text-white text-xl font-bold">
-            {selectionText}
-          </p>
-        </div>
-      </button>
-    );
-  } else {
-    return (
-      <button
-        onClick={() =>
-          updateConfigProgress(
-            configurations,
-            key,
-            selectionText,
-            progress,
-            setProgress
-          )
-        }
-      >
-        <div className="relative flex max-w-fit justify-center items-center">
-          <Image src="/images/SubjectSelectBox.svg" height={124} width={124} />
-          <p className="absolute top-[8px] text-white text-2xl font-bold">
-            {selectionText}
-          </p>
-        </div>
-      </button>
-    );
-  }
+  return (
+    <button
+      onClick={() =>
+        updateConfigProgress(
+          configurations,
+          key,
+          selectionText,
+          progress,
+          setProgress
+        )
+      }
+    >
+      <div className="px-6 py-[2px] rounded-xl bg-dark color-cool-white text-2xl font-bold">
+        {selectionText}
+      </div>
+    </button>
+  );
 }
 
 function SelectionList({ selections }) {
@@ -127,56 +91,18 @@ function SelectionList({ selections }) {
   });
 
   return (
-    <div className="flex flex-wrap gap-4 w-4/5 max-w-[600px] justify-center">
-      {components}
-    </div>
-  );
-}
-
-function Dropdowns({ options, placeholders }) {
-  let components = [];
-  const { progress, setProgress, configurations } = useContext(Context);
-
-  for (let i = 0; i < options.length; i++) {
-    const placeholder = placeholders[i];
-
-    // TODO improve algorithm
-    const handleSelect = (e) => {
-      if (placeholder == "학교급 선택") {
-        configurations.current["schooltype"] = e.label;
-      } else if (placeholder == "학년/학기 선택") {
-        configurations.current["semester"] = e.label;
-      } else if (placeholder == "교과서 출판사") {
-        configurations.current["publisher"] = e.label;
-      }
-    };
-
-    components.push(
-      <Select
-        options={options[i]}
-        placeholder={placeholder}
-        onChange={handleSelect}
-      />
-    );
-  }
-
-  return (
-    <div className="flex flex-col mb-4 gap-4 w-4/5 max-w-[200px] p-4 rounded-xl bg-[#0f1c41]">
+    <div className="flex flex-wrap gap-x-8 gap-y-6 w-4/5 mt-6 max-w-[600px] justify-center">
       {components}
     </div>
   );
 }
 
 function SelectSubject() {
-  return addTransition(
+  return (
     <>
       <ProgressBar progress={1} />
-      <h1 className="mb-2 text-5xl text-blue-600 tracking-tight font-bold">
-        수행평가 과목이 무엇입니까?
-      </h1>
-      <p className="mb-4 text-2xl text-indigo-400 tracking-tight font-semibold">
-        따플이가 자료를 준비할 수 있게 도와주세요
-      </p>
+      <Header> 수행평가 과목이 무엇입니까?</Header>
+      <SubHeader>따플이가 자료를 준비할 수 있게 도와주세요</SubHeader>
       <SelectionList
         selections={[
           "국어",
@@ -194,15 +120,11 @@ function SelectSubject() {
 }
 
 function SelectType() {
-  return addTransition(
+  return (
     <>
       <ProgressBar progress={2} />
-      <h1 className="mb-2 text-5xl text-blue-600 tracking-tight font-bold">
-        수행평가 형식이 무엇입니까?
-      </h1>
-      <p className="mb-4 text-2xl text-indigo-400 tracking-tight font-semibold">
-        따플이가 마음의 준비를 할 수 있게 도와주세요.
-      </p>
+      <Header>수행평가 형식이 무엇입니까?</Header>
+      <SubHeader>따플이가 마음의 준비를 할 수 있게 도와주세요.</SubHeader>
       <SelectionList
         selections={[
           "보고서",
@@ -221,27 +143,12 @@ function SelectType() {
 function AdditionalInfo() {
   const { progress, setProgress, configurations } = useContext(Context);
 
-  const schoolType = [
-    { value: "middle", label: "중학교" },
-    { value: "high", label: "고등학교" },
-  ];
-  const semesters = [
-    { value: 11, label: "1학년 1학기" },
-    { value: 12, label: "1학년 2학기" },
-    { value: 21, label: "2학년 1학기" },
-    { value: 22, label: "2학년 2학기" },
-    { value: 31, label: "3학년 1학기" },
-    { value: 32, label: "3학년 2학기" },
-  ];
-  const publisher = [{ value: "shinsago", label: "신사고" }];
-  const placeholders = ["학교급 선택", "학년/학기 선택", "교과서 출판사"];
-
-  const title = useRef(null);
-  const rubric = useRef(null);
+  const [title, setTitle] = useState(null);
+  const [rubric, setRubric] = useState(null);
 
   const handleSubmit = () => {
-    configurations.current["title"] = title.current.value;
-    configurations.current["rubric"] = rubric.current.value;
+    configurations.current["title"] = title;
+    configurations.current["rubric"] = rubric;
 
     fetch("http://localhost:8080/api/config-test", {
       method: "POST",
@@ -252,38 +159,49 @@ function AdditionalInfo() {
     });
   };
 
-  return addTransition(
+  return (
     <>
       <ProgressBar progress={3} />
-      <h1 className="mb-2 text-5xl text-blue-600 tracking-tight font-bold">
-        추가적인 정보를 입력해주세요
-      </h1>
-      <p className="mb-4 text-2xl text-indigo-400 tracking-tight font-semibold">
-        따플이가 정확히 대비할 수 있게 도와주세요
-      </p>
-      <div className="flex gap-4">
-        <Dropdowns
-          options={[schoolType, semesters, publisher]}
-          placeholders={placeholders}
-        />
-        <div className="flex flex-col mb-4 gap-4 w-4/5 max-w-[200px] p-4 rounded-xl bg-[#0f1c41]">
-          <input
-            name="title"
-            className="px-2 h-[39px] text-base rounded-xl"
+      <Header>추가적인 정보를 입력해주세요</Header>
+      <SubHeader>따플이가 정확히 대비할 수 있게 도와주세요</SubHeader>
+      <div className="flex gap-4 mt-6 mb-4">
+        <div className="flex flex-col justify-center p-2 gap-6 rounded-xl bg-grey">
+          <Dropdown
+            placeholder={"학교급 선택"}
+            onChange={(_, n) => (configurations.current["schooltype"] = n)}
+          >
+            <Option value={"중학교"}>"중학교"</Option>
+            <Option value={"고등학교"}>"고등학교"</Option>
+          </Dropdown>
+          <Dropdown
+            placeholder={"학년/학기 선택"}
+            onChange={(_, n) => (configurations.current["semester"] = n)}
+          >
+            <Option value={"1학년 1학기"}>"1학년 1학기"</Option>
+            <Option value={"1학년 1학기"}>"1학년 2학기"</Option>
+            <Option value={"2학년 1학기"}>"2학년 1학기"</Option>
+            <Option value={"2학년 2학기"}>"2학년 2학기"</Option>
+            <Option value={"3학년 1학기"}>"3학년 1학기"</Option>
+            <Option value={"3학년 2학기"}>"3학년 2학기"</Option>
+          </Dropdown>
+        </div>
+
+        <div className="flex flex-col gap-5 w-4/5 max-w-[200px] p-2 rounded-xl bg-grey">
+          <Input
             placeholder="수행평가 제목"
-            ref={title}
+            onChange={(e) => setTitle(e.target.value)}
+            value={title}
           />
-          <input
-            name="rubric"
-            className="px-2 h-[39px] text-base rounded-xl"
+          <Input
             placeholder="성취 기준"
-            ref={rubric}
+            onChange={(e) => setRubric(e.target.value)}
+            value={rubric}
           />
         </div>
       </div>
       <Link
         href="/editor"
-        className="p-2 w-[100px] rounded-xl bg-[#0f1c41] text-lg text-white text-center"
+        className="p-2 w-1/6 rounded-xl text-lg color-cool-white text-center bg-dark hover:bg-slate-900 hover:duration-100"
         onClick={handleSubmit}
       >
         완료
@@ -300,13 +218,12 @@ function Configure() {
     format: "",
     schooltype: "",
     semester: "",
-    publisher: "",
     title: "",
     rubric: "",
   });
 
   return (
-    <div className="h-screen pt-[72px] bg-cyan-200 z-0">
+    <div className="flex flex-col px-16 gap-2 items-center justify-center h-[calc(100vh-44px)] bg-dark-blue">
       <Context.Provider value={{ progress, setProgress, configurations }}>
         {screens[progress - 1]}
       </Context.Provider>

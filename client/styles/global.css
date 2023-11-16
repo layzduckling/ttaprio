@@ -6,3 +6,39 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
 }
+
+.bg-dark {
+  background-color: #212a3e;
+}
+
+.color-dark {
+  color: #212a3e;
+}
+
+.bg-dark-blue {
+  background-color: #394867;
+}
+
+.border-dark-blue {
+  border-color: #394867;
+}
+
+.bg-grey {
+  background-color: #9ba4b5;
+}
+
+.border-grey {
+  border-color: #9ba4b5;
+}
+
+.color-grey {
+  color: #9ba4b5;
+}
+
+.bg-cool-white {
+  background-color: #f1f6f9;
+}
+
+.color-cool-white {
+  color: #f1f6f9;
+}
