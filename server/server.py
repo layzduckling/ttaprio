@@ -24,7 +24,7 @@ gpt_client = OpenAI(
 
 # app instance
 app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins='*')
+socketio = SocketIO(app, cors_allowed_origins='*', engineio_logger=True)
 CORS(app)
 
 async def fetch_ai_response(prompt):
