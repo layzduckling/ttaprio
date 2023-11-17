@@ -159,22 +159,23 @@ function ChatBubble(props) {
 }
 
 function Chat() {
-  const [chatHistory, updateChatHistory] = useState([]);
+  const [chatHistory, setChatHistory] = useState([]);
   const [dropdownValue, setDropdownValue] = useState(null);
   const [isInputDisabled, disableInput] = useState(true);
   const [input, setInput] = useState(null);
   const ref = useRef(null);
   const { editorRef, selection } = useContext(Context);
 
-  useEffect(() => {
-    const onTutorRes = (res) => {
-      updateChatHistory([
-        ...chatHistory.slice(0, -1),
-        <ChatBubble isRight={false} text={res.trim()} />, // There might be unnecessary spaces or empty lines in front.
-      ]);
-      ref.current?.scrollIntoView({ block: "end" });
-    };
+  const onTutorRes = (res) => {
+    // The event handler couldn't access the latest state
+    setChatHistory((prevChatHistory) => [
+      ...prevChatHistory.slice(0, -1),
+      <ChatBubble isRight={false} text={res.trim()} />, // There might be unnecessary spaces or empty lines in front.
+    ]);
+    ref.current?.scrollIntoView({ block: "end" });
+  };
 
+  useEffect(() => {
     socket.on("tutorRes", onTutorRes);
 
     return () => {
@@ -224,7 +225,7 @@ function Chat() {
   const requestPrompt = () => {
     const prompt = input;
 
-    updateChatHistory([
+    setChatHistory([
       ...chatHistory,
       <ChatBubble isRight={true} text={prompt} />,
       <Skeleton className="bg-grey">
