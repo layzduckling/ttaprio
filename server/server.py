@@ -140,4 +140,5 @@ instruction = ""
 rubric = ""
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, port=8080) # dev mode
+    # TODO temp fix to run Werkzeug web server in production
+    socketio.run(app, host="0.0.0.0", port=8080, debug=True, allow_unsafe_werkzeug=True) 
