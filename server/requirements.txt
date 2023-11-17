@@ -3,3 +3,4 @@ Flask-Cors==4.0.0
 Flask-SocketIO==5.3.6
 openai==1.2.4
 python-dotenv==1.0.0
+websockets==11.0.3
