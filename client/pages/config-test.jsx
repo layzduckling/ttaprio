@@ -150,7 +150,7 @@ function AdditionalInfo() {
     configurations.current["title"] = title;
     configurations.current["rubric"] = rubric;
 
-    fetch("http://localhost:8080/api/config-test", {
+    fetch("http://api.ttapr.io/api/config-test", {
       method: "POST",
       body: JSON.stringify(configurations.current),
       headers: {
