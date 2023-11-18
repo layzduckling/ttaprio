@@ -150,13 +150,13 @@ function AdditionalInfo() {
     configurations.current["title"] = title;
     configurations.current["rubric"] = rubric;
 
-    fetch("https://api.ttapr.io/api/config-test", {
-      method: "POST",
-      body: JSON.stringify(configurations.current),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    });
+    // fetch("https://api.ttapr.io/api/config-test", {
+    //   method: "POST",
+    //   body: JSON.stringify(configurations.current),
+    //   headers: {
+    //     "Content-type": "application/json; charset=UTF-8",
+    //   },
+    // });
   };
 
   return (
@@ -200,7 +200,10 @@ function AdditionalInfo() {
         </div>
       </div>
       <Link
-        href="/editor"
+        href={{
+          pathname: "/editor",
+          query: configurations.current,
+        }}
         className="p-2 w-1/6 rounded-xl text-lg color-cool-white text-center bg-dark hover:bg-slate-900 hover:duration-100"
         onClick={handleSubmit}
       >

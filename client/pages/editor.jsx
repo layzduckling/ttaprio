@@ -6,6 +6,7 @@ import React, {
   useContext,
 } from "react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import "react-quill/dist/quill.snow.css";
 
 import { Skeleton } from "@mui/material";
@@ -165,6 +166,7 @@ function Chat() {
   const [input, setInput] = useState(null);
   const ref = useRef(null);
   const { editorRef, selection } = useContext(Context);
+  const router = useRouter();
 
   const onTutorRes = (res) => {
     // The event handler couldn't access the latest state
@@ -209,6 +211,8 @@ function Chat() {
     if (!text.trim()) {
       return;
     }
+    
+    const config = router.query;
 
     const prompts = {
       complete: `${text}\n본문 뒤에 내용을 추론해서 이어 작성해줘.`,
