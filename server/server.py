@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_socketio import SocketIO, send, emit
+from flask_socketio import SocketIO, emit
 from flask_cors import CORS
 
 import asyncio
@@ -82,21 +82,6 @@ async def fetch_ai_response(prompt):
                 case "stream_end":
                     logging.info(response)
                     return response
-
-@app.route("/api/config-test", methods=["POST"])
-def config_test():
-    if request.method == "POST":
-        global instruction, rubric
-
-        configurations = request.get_json()
-        rubric = configurations['rubric']
-        instruction = f"나는 {configurations['schooltype']} {configurations['semester']} 학생이야. 곧 {configurations['subject']} {configurations['title']} 수행평가를 봐야 하는데, {rubric}에 따라서 채점 돼. 수행평가 형식은 {configurations['format']}이야."
-
-        logging.info(instruction)
-
-        return "Success"
-
-    return "Not allowed", 405
 
 @socketio.on("tutorReq")
 def handle_improve(data):
