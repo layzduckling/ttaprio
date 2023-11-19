@@ -136,7 +136,7 @@ function GradeWidget() {
           </>
         ) : (
           <Skeleton
-            className="bg-dark-blue"
+            sx={{ backgroundColor: "#394867" }}
             variant="rounded"
             width={"100%"}
             height={"100%"}
@@ -232,7 +232,7 @@ function Chat() {
     setChatHistory([
       ...chatHistory,
       <ChatBubble isRight={true} text={prompt} />,
-      <Skeleton className="bg-grey">
+      <Skeleton sx={{ backgroundColor: "#9ba4b5" }}>
         <ChatBubble isRight={false} text={"Response"} />
       </Skeleton>,
     ]); // Set text to Response for the Skeleton's shape
