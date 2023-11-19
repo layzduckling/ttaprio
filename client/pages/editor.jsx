@@ -22,7 +22,7 @@ import { Modal, IconButton, Input, Select, Option } from "../components/CoreUI";
 
 const Context = createContext();
 
-const socket = io("https://api.ttapr.io:8080");
+const socket = io("wss://api.ttapr.io");
 
 // When next/dynamic wraps a component, it doesn't forward ref to the internal component
 const ReactQuill = dynamic(
