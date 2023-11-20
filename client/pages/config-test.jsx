@@ -1,4 +1,5 @@
 import React, { createContext, useState, useRef, useContext } from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 import Logo from "../components/Logo";
@@ -227,6 +228,7 @@ function Configure() {
 
   return (
     <div className="flex flex-col px-16 gap-2 items-center justify-center h-[calc(100vh-44px)] bg-dark-blue">
+      <Image src="/images/bird.png" width={160} height={160} className="-m-8 bg-transparent" />
       <Context.Provider value={{ progress, setProgress, configurations }}>
         {screens[progress - 1]}
       </Context.Provider>
