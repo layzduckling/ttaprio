@@ -170,19 +170,19 @@ function AdditionalInfo() {
             placeholder={"학교급 선택"}
             onChange={(_, n) => (configurations.current["schooltype"] = n)}
           >
-            <Option value={"중학교"}>"중학교"</Option>
-            <Option value={"고등학교"}>"고등학교"</Option>
+            <Option value={"중학교"}>중학교</Option>
+            <Option value={"고등학교"}>고등학교</Option>
           </Dropdown>
           <Dropdown
             placeholder={"학년/학기 선택"}
             onChange={(_, n) => (configurations.current["semester"] = n)}
           >
-            <Option value={"1학년 1학기"}>"1학년 1학기"</Option>
-            <Option value={"1학년 1학기"}>"1학년 2학기"</Option>
-            <Option value={"2학년 1학기"}>"2학년 1학기"</Option>
-            <Option value={"2학년 2학기"}>"2학년 2학기"</Option>
-            <Option value={"3학년 1학기"}>"3학년 1학기"</Option>
-            <Option value={"3학년 2학기"}>"3학년 2학기"</Option>
+            <Option value={"1학년 1학기"}>1학년 1학기</Option>
+            <Option value={"1학년 1학기"}>1학년 2학기</Option>
+            <Option value={"2학년 1학기"}>2학년 1학기</Option>
+            <Option value={"2학년 2학기"}>2학년 2학기</Option>
+            <Option value={"3학년 1학기"}>3학년 1학기</Option>
+            <Option value={"3학년 2학기"}>3학년 2학기</Option>
           </Dropdown>
         </div>
 
