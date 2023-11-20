@@ -7,7 +7,7 @@ import Logo from "../components/Logo";
 
 function SelectionTry() {
   return (
-    <div className="flex flex-col gap-6 ml-16 pr-[40%] justify-center h-full color-cool-white">
+    <div className="flex flex-col gap-6 ml-16 justify-center h-full color-cool-white">
       <h2 className="text-7xl font-extrabold whitespace-nowrap leading-snug">
         무.작.정. <br />
         따라해보기
@@ -27,8 +27,9 @@ function SelectionTry() {
 
 function SelectionContainer() {
   return (
-    <div className="flex h-[calc(100vh-48px)] bg-dark-blue">
+    <div className="flex h-[calc(100vh-48px)] bg-dark-blue items-center justify-between overflow-hidden">
       <SelectionTry />
+      <Image src="/images/bird.png" width={600} height={600} className="ml-12" />
     </div>
   );
 }
