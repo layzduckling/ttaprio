@@ -9,3 +9,12 @@
   border-top-left-radius: 0.75rem;
   border-top-right-radius: 0.75rem;
 }
+
+span.ql-picker-label {
+  /* Adjust the text size of the toolbar's picker */
+  font-size: 14px; 
+}
+
+.ql-editor > p {
+  font-size: 12pt;
+}

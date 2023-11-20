@@ -34,7 +34,7 @@ const ReactQuill = dynamic(
 );
 const editorModules = {
   toolbar: {
-    container: [["bold", "italic", "underline"]],
+    container: [[{ header: [ 1, 2, 3, false ]}, "bold", "italic", "underline"]],
   },
 };
 
@@ -123,13 +123,14 @@ function GradeWidget() {
               {/* <RefreshIcon htmlColor="#9ba4b5" /> */}
               <span className="color-dark font-bold">등급 내기</span>
             </IconButton>
-            <IconButton
+            {/* Only allow the "show reason" button to appear when a reason exists */}
+            {reason ? ( <IconButton
               className="w-[84px] absolute right-2 bottom-2 border-2 border-grey"
               onClick={handleOpen}
             >
               {/* <ChevronRightIcon htmlColor="#9ba4b5" className="text-3xl" /> */}
               <span className="color-dark font-bold">이유 보기</span>
-            </IconButton>
+            </IconButton>) : (<></>)}
             <ReasonModal
               open={isOpen}
               onClose={handleClose}
