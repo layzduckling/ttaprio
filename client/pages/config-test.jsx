@@ -1,4 +1,4 @@
-import React, { createContext, useState, useRef, useContext } from "react";
+import React, { createContext, useState, useRef, useEffect, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -147,18 +147,10 @@ function AdditionalInfo() {
   const [title, setTitle] = useState(null);
   const [rubric, setRubric] = useState(null);
 
-  const handleSubmit = () => {
+  useEffect(() => {
     configurations.current["title"] = title;
     configurations.current["rubric"] = rubric;
-
-    // fetch("https://api.ttapr.io/api/config-test", {
-    //   method: "POST",
-    //   body: JSON.stringify(configurations.current),
-    //   headers: {
-    //     "Content-type": "application/json; charset=UTF-8",
-    //   },
-    // });
-  };
+  })
 
   return (
     <>
@@ -206,7 +198,6 @@ function AdditionalInfo() {
           query: configurations.current,
         }}
         className="p-2 w-1/6 rounded-xl text-lg color-cool-white text-center bg-dark hover:bg-slate-900 hover:duration-100"
-        onClick={handleSubmit}
       >
         완료
       </Link>
