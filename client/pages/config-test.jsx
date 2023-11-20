@@ -103,7 +103,7 @@ function SelectSubject() {
     <>
       <ProgressBar progress={1} />
       <Header> 수행평가 과목이 무엇입니까?</Header>
-      <SubHeader>따플이가 자료를 준비할 수 있게 도와주세요</SubHeader>
+      <SubHeader>따플이가 자료를 준비할 수 있게 도와주세요.</SubHeader>
       <SelectionList
         selections={[
           "국어",
@@ -156,7 +156,7 @@ function AdditionalInfo() {
     <>
       <ProgressBar progress={3} />
       <Header>추가적인 정보를 입력해주세요</Header>
-      <SubHeader>따플이가 정확히 대비할 수 있게 도와주세요</SubHeader>
+      <SubHeader>따플이가 정확히 대비할 수 있게 도와주세요.</SubHeader>
       <div className="flex gap-4 mt-6 mb-4">
         <div className="flex flex-col justify-center p-2 gap-6 rounded-xl bg-grey">
           <Dropdown
