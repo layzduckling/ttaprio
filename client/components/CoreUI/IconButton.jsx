@@ -9,7 +9,7 @@ const IconButton = React.forwardRef((props, ref) => {
       slotProps={{
         root: {
           className:
-            "flex justify-center items-center h-[32px] w-[32px] rounded-full bg-cool-white hover:bg-slate-200 hover:duration-200 disabled:hover:bg-transparent",
+            "flex justify-center items-center gap-1 h-[32px] w-[32px] rounded-full bg-cool-white hover:bg-slate-200 hover:duration-200 disabled:hover:bg-transparent",
         },
       }}
     ></BaseButton>

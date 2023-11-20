@@ -11,8 +11,8 @@ import "react-quill/dist/quill.snow.css";
 
 import { Skeleton } from "@mui/material";
 
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import RefreshIcon from "@mui/icons-material/Refresh";
+// import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+// import RefreshIcon from "@mui/icons-material/Refresh";
 import SendIcon from "@mui/icons-material/Send";
 
 import io from "socket.io-client";
@@ -119,14 +119,16 @@ function GradeWidget() {
             <em className="font-bold not-italic text-5xl color-dark">
               {grade}
             </em>
-            <IconButton className="absolute right-2 top-2" onClick={evaluate}>
-              <RefreshIcon htmlColor="#9ba4b5" />
+            <IconButton className="w-[84px] absolute right-2 top-2 border-2 border-grey" onClick={evaluate}>
+              {/* <RefreshIcon htmlColor="#9ba4b5" /> */}
+              <span className="color-dark font-bold">등급 내기</span>
             </IconButton>
             <IconButton
-              className="absolute right-2 bottom-2"
+              className="w-[84px] absolute right-2 bottom-2 border-2 border-grey"
               onClick={handleOpen}
             >
-              <ChevronRightIcon htmlColor="#9ba4b5" />
+              {/* <ChevronRightIcon htmlColor="#9ba4b5" className="text-3xl" /> */}
+              <span className="color-dark font-bold">이유 보기</span>
             </IconButton>
             <ReasonModal
               open={isOpen}
@@ -213,6 +215,7 @@ function Chat() {
     }
     
     const config = router.query;
+    console.log(config);
 
     const prompts = {
       complete: `${text}\n본문 뒤에 내용을 추론해서 이어 작성해줘.`,
@@ -263,7 +266,7 @@ function Chat() {
             onClick={requestPrompt}
             disabled={isInputDisabled ? true : false}
           >
-            <SendIcon htmlColor={isInputDisabled ? "#9ba4b5" : "#394867"} />
+            <SendIcon htmlColor={isInputDisabled ? "#9ba4b5" : "#394867"} className="text-3xl" />
           </IconButton>
         </div>
         <ActionDropdown
