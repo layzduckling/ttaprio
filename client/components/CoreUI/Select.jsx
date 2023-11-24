@@ -9,7 +9,7 @@ const Select = React.forwardRef((props, ref) => {
       <button
         {...p}
         ref={r}
-        className="flex justify-between items-center px-2 rounded-xl bg-slate-200 hover:bg-slate-300 hover:duration-100 disabled:bg-slate-300"
+        className="flex justify-between items-center w-full px-2 rounded-xl bg-slate-200 hover:bg-slate-300 hover:duration-100 disabled:bg-slate-300"
       >
         <div id="button-text">{p.children}</div>
         <UnfoldMoreIcon fontSize="small" />
@@ -18,6 +18,8 @@ const Select = React.forwardRef((props, ref) => {
   });
 
   return (
+    // TODO temp fix to remove the margin of the hidden input
+    <div className="input-rmm">
     <BaseSelect
       ref={ref}
       {...props}
@@ -30,6 +32,7 @@ const Select = React.forwardRef((props, ref) => {
         },
       }}
     ></BaseSelect>
+    </div>
   );
 });
 

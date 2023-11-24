@@ -43,3 +43,7 @@
 .color-cool-white {
   color: #f1f6f9;
 }
+
+.input-rmm > input {
+  margin: 0 !important;
+}

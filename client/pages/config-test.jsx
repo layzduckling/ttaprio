@@ -1,9 +1,18 @@
-import React, { createContext, useState, useRef, useEffect, useContext } from "react";
+import React, {
+  createContext,
+  useState,
+  useRef,
+  useEffect,
+  useContext,
+} from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Popper, useAutocomplete } from "@mui/base";
 
 import Logo from "../components/Logo";
 import { Input, Select as Dropdown, Option } from "../components/CoreUI";
+
+import rubricList from "./_rubricList";
 
 const Context = createContext();
 
@@ -147,10 +156,23 @@ function AdditionalInfo() {
   const [title, setTitle] = useState(null);
   const [rubric, setRubric] = useState(null);
 
+  const {
+    getInputProps,
+    getListboxProps,
+    getOptionProps,
+    getRootProps,
+    anchorEl,
+    setAnchorEl,
+    popupOpen,
+    groupedOptions,
+  } = useAutocomplete({
+    options: rubricList,
+  });
+
   useEffect(() => {
     configurations.current["title"] = title;
     configurations.current["rubric"] = rubric;
-  })
+  });
 
   return (
     <>
@@ -158,7 +180,7 @@ function AdditionalInfo() {
       <Header>추가적인 정보를 입력해주세요</Header>
       <SubHeader>따플이가 정확히 대비할 수 있게 도와주세요.</SubHeader>
       <div className="flex gap-4 mt-6 mb-4">
-        <div className="flex flex-col justify-center p-2 gap-6 rounded-xl bg-grey">
+        <div className="flex flex-col justify-center h-fit p-2 gap-6 rounded-xl bg-grey">
           <Dropdown
             placeholder={"학교급 선택"}
             onChange={(_, n) => (configurations.current["schooltype"] = n)}
@@ -185,11 +207,44 @@ function AdditionalInfo() {
             onChange={(e) => setTitle(e.target.value)}
             value={title}
           />
-          <Input
-            placeholder="성취 기준"
-            onChange={(e) => setRubric(e.target.value)}
-            value={rubric}
-          />
+          <div {...getRootProps()} className="flex gap-5" ref={setAnchorEl}>
+            <Input
+              placeholder="성취 기준"
+              onChange={(e) => setRubric(e.target.value)}
+              value={rubric}
+              {...getInputProps()}
+            />
+            <Popper
+              open={popupOpen}
+              anchorEl={anchorEl}
+              slotProps={{
+                root: {
+                  className:
+                    "absolute w-1/4 h-1/6 overflow-y-scroll px-1 py-[2px] z-[1001] bg-slate-200 rounded-lg",
+                },
+              }}
+              modifiers={[{ name: "flip", enabled: false }]}
+            >
+              <ul {...getListboxProps()}>
+                {groupedOptions.map((option, index) => {
+                  const optionProps = getOptionProps({ option, index });
+
+                  return (
+                    <li
+                      {...optionProps}
+                      className="rounded-md hover:bg-slate-300 hover:duration-100"
+                    >
+                      {option}
+                    </li>
+                  );
+                })}
+
+                {groupedOptions.length === 0 && (
+                  <li className="list-none cursor-default">검색 결과 없음</li>
+                )}
+              </ul>
+            </Popper>
+          </div>
         </div>
       </div>
       <Link
@@ -218,8 +273,13 @@ function Configure() {
   });
 
   return (
-    <div className="flex flex-col px-16 gap-2 items-center justify-center h-[calc(100vh-44px)] bg-dark-blue">
-      <Image src="/images/bird.png" width={160} height={160} className="-m-8 bg-transparent" />
+    <div className="flex flex-col px-16 gap-2 items-center justify-center h-[calc(100vh-48px)] bg-dark-blue">
+      <Image
+        src="/images/bird.png"
+        width={160}
+        height={160}
+        className="-m-8 bg-transparent"
+      />
       <Context.Provider value={{ progress, setProgress, configurations }}>
         {screens[progress - 1]}
       </Context.Provider>

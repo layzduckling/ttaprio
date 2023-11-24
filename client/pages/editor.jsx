@@ -250,7 +250,7 @@ function Chat() {
 
   return (
     <div className="flex flex-col h-full gap-1 p-2">
-      <div className="flex-1 flex flex-col gap-2 overflow-scroll">
+      <div className="flex-1 flex flex-col gap-2 overflow-y-scroll">
         {chatHistory}
         <div ref={ref}></div>
       </div>
