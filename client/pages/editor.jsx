@@ -246,7 +246,7 @@ function Chat() {
       complete: `${text}\n본문 뒤에 내용을 추론해서 이어 작성해줘.`,
       fix: `${text}\n본문의 내용을 해치지 않는 선에게 어색한 표현을 고쳐줘.`,
       completeArg: `${text}\n이 주제에 대해서 주장1문단 근거2문단 결과1문단으로 글을 써줘.`,
-      paraphrase: `${text}\n위에 내용을 단어의 표현을 바꿔서 짜임새 있게 새로 짜줘.`,
+      paraphrase: `${text}\n위에 내용에서 단어의 표현을 바꿔서 짜임새 있게 새로 작성해줘.`,
       summarize: `${text}\n위에 있는 본문을 한줄로 요약해줘.`,
     };
 
@@ -307,7 +307,7 @@ function Chat() {
             { label: "이어 작성하기", value: "complete" },
             { label: "문법 교정하기", value: "fix" },
             { label: "논증 완성하기", value: "completeArg" },
-            { label: "재진술하기", value: "paraphrase" },
+            { label: "다시 작성하기", value: "paraphrase" },
             { label: "한 줄 요약하기", value: "summarize" },
           ]}
           handleSelect={generatePrompt}
