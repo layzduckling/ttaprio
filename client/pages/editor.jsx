@@ -20,7 +20,7 @@ import io from "socket.io-client";
 import Logo from "../components/Logo";
 import { Modal, IconButton, Input, Select, Option } from "../components/CoreUI";
 
-import promptList from "./_promptList";
+import promptList from "../components/_promptList";
 
 const Context = createContext();
 
@@ -69,6 +69,7 @@ function ActionDropdown({ optionList, handleSelect, ...props }) {
         onClick={() => {
           handleSelect(option.value);
         }}
+        emphasis={option.emphasis}
       >
         {option.label}
       </Option>
@@ -190,9 +191,11 @@ function Chat() {
 
   useEffect(() => {
     socket.on("tutorRes", onTutorRes);
+    socket.on("gptTutorRes", onTutorRes);
 
     return () => {
       socket.off("tutorRes", onTutorRes);
+      socket.off("gptTutorRes", onTutorRes);
     };
   }, []);
 
@@ -226,9 +229,15 @@ function Chat() {
     const config = router.query;
 
     const prompts = {
-      idea: `너는 현재 ${config.format}를 쓰는 학생이야. 학생의 입장으로 ${config.format}의 문학 아이디어를 만들어야 해. 아래에 너가 할일, 평가를 받는 성취기준, 문장 생성형식, 원문내용을 규정해줄거야. 원문내용의 내용을 그대로 유지하고, 내용을 추론해서 문학 아이디어를 만들면 돼.
+      idea: `너는 현재 ${config.format}를 쓰는 학생이야. 학생의 입장으로 ${
+        config.format
+      }의 문학 아이디어를 만들어야 해. 아래에 너가 할일, 평가를 받는 성취기준, 문장 생성형식, 원문내용을 규정해줄거야. 원문내용의 내용을 그대로 유지하고, 내용을 추론해서 문학 아이디어를 만들면 돼.
 
-할일 : 너는 ${config.format}의 문학 아이디어를 만들어. 원문내용의 내용을 해치지 않고 작품 설명없이 바로 ${config.format}를 이어써줘.
+할일 : 너는 ${
+        config.format
+      }의 문학 아이디어를 만들어. 원문내용의 내용을 해치지 않고 작품 설명없이 바로 ${
+        config.format
+      }를 이어써줘.
 성취기준 : ${config.rubric}
 문장생성형식 : ${promptList[config.format]}
 원문내용 : ${text}
@@ -259,7 +268,12 @@ function Chat() {
     updateInputBox("");
     setDropdownValue(null);
 
-    socket.emit("tutorReq", prompt);
+    // 문학 아이디어가 아닐 경우 GPT 사용
+    if (dropdownValue === "idea") {
+      socket.emit("gptTutorReq", prompt);
+    } else {
+      socket.emit("tutorReq", prompt);
+    }
   };
 
   return (
@@ -289,7 +303,7 @@ function Chat() {
         </div>
         <ActionDropdown
           optionList={[
-            { label: "문학 아이디어", value: "idea" },
+            { label: "문학 아이디어", value: "idea", emphasis: true },
             { label: "이어 작성하기", value: "complete" },
             { label: "문법 교정하기", value: "fix" },
             { label: "논증 완성하기", value: "completeArg" },

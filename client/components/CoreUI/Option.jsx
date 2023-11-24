@@ -6,6 +6,7 @@ const Option = React.forwardRef((props, ref) => {
     <BaseOption
       ref={ref}
       {...props}
+      className={props.emphasis && "bg-amber-400 hover:bg-amber-500"}
       slotProps={{
         root: {
           className:

@@ -12,7 +12,7 @@ import { Popper, useAutocomplete, MenuItem } from "@mui/base";
 import Logo from "../components/Logo";
 import { Menu, Input, Select as Dropdown, Option } from "../components/CoreUI";
 
-import rubricList from "./_rubricList";
+import rubricList from "../components/_rubricList";
 
 const Context = createContext();
 
