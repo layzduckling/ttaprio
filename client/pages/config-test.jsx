@@ -7,10 +7,10 @@ import React, {
 } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Popper, useAutocomplete } from "@mui/base";
+import { Popper, useAutocomplete, MenuItem } from "@mui/base";
 
 import Logo from "../components/Logo";
-import { Input, Select as Dropdown, Option } from "../components/CoreUI";
+import { Menu, Input, Select as Dropdown, Option } from "../components/CoreUI";
 
 import rubricList from "./_rubricList";
 
@@ -60,7 +60,11 @@ function ProgressBar({ progress }) {
   return <div className="flex m-4">{bars}</div>;
 }
 
-function Selection({ selectionText, long = false }) {
+function Selection({
+  selectionText,
+  additionalSelect = false,
+  additionalOptions = [],
+}) {
   const { progress, setProgress, configurations } = useContext(Context);
   let key = "";
 
@@ -70,7 +74,29 @@ function Selection({ selectionText, long = false }) {
     key = "format";
   }
 
-  return (
+  const buttonStyle =
+    "px-6 py-[2px] rounded-xl bg-dark color-cool-white text-2xl font-bold";
+
+  return additionalSelect ? (
+    <Menu title={selectionText} baseStyle={buttonStyle}>
+      {additionalOptions.map((option) => (
+        <MenuItem
+          className="px-2 py-1 rounded-lg hover:bg-[#91c8E4] hover:duration-100"
+          onClick={() =>
+            updateConfigProgress(
+              configurations,
+              key,
+              `${selectionText}(${option})`,
+              progress,
+              setProgress
+            )
+          }
+        >
+          {option}
+        </MenuItem>
+      ))}
+    </Menu>
+  ) : (
     <button
       onClick={() =>
         updateConfigProgress(
@@ -82,9 +108,7 @@ function Selection({ selectionText, long = false }) {
         )
       }
     >
-      <div className="px-6 py-[2px] rounded-xl bg-dark color-cool-white text-2xl font-bold">
-        {selectionText}
-      </div>
+      <div className={buttonStyle}>{selectionText}</div>
     </button>
   );
 }
@@ -93,8 +117,15 @@ function SelectionList({ selections }) {
   let components = [];
 
   selections.forEach((selectionText) => {
-    if (selectionText.length >= 4) {
-      components.push(<Selection selectionText={selectionText} long={true} />);
+    if (typeof selectionText == "object") {
+      const type = Object.keys(selectionText)[0];
+      components.push(
+        <Selection
+          selectionText={type}
+          additionalSelect
+          additionalOptions={selectionText[type]}
+        />
+      );
     } else {
       components.push(<Selection selectionText={selectionText} />);
     }
@@ -141,9 +172,25 @@ function SelectType() {
           "발표",
           "일기",
           "암기형",
-          "설명문",
+          {
+            설명문: [
+              "철학",
+              "거시경제",
+              "미시경제",
+              "IT",
+              "과학사",
+              "미술사",
+              "사회이론",
+              "생물",
+              "물리",
+              "역사",
+              "민법",
+              "행정법",
+            ],
+          },
           "수필",
           "논설문",
+          { 편지: ["안부", "사과", "축하", "감사", "위문"] }
         ]}
       />
     </>
