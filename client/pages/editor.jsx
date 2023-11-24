@@ -270,9 +270,9 @@ function Chat() {
 
     // 문학 아이디어가 아닐 경우 GPT 사용
     if (dropdownValue === "idea") {
-      socket.emit("gptTutorReq", prompt);
-    } else {
       socket.emit("tutorReq", prompt);
+    } else {
+      socket.emit("gptTutorReq", prompt);
     }
   };
 
