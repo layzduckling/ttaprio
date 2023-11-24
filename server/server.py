@@ -86,10 +86,25 @@ async def fetch_ai_response(prompt):
 @socketio.on("tutorReq")
 def handle_improve(data):
     logging.info("Connected")
-    response = asyncio.run(fetch_ai_response(instruction + data))
+    response = asyncio.run(fetch_ai_response(data))
     
     emit("tutorRes", response)
 
+
+@socketio.on("gptTutorReq")
+def gpt_handle_improve(data):
+    logging.info("Connected")
+    raw_res = gpt_client.chat.completions.create(
+        messages=[{
+            "role": "user",
+            "content": data,
+        }],
+        model="gpt-4",
+    )
+
+    response = raw_res.choices[0].message.content
+
+    emit("gptTutorRes", response)
 
 @socketio.on("evaluationReq")
 def handle_eval(data):
