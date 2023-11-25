@@ -19,19 +19,19 @@ const Select = React.forwardRef((props, ref) => {
 
   return (
     // TODO temp fix to remove the margin of the hidden input
-    <div className="input-rmm">
-    <BaseSelect
-      ref={ref}
-      {...props}
-      slots={{
-        root: SelectButton,
-      }}
-      slotProps={{
-        listbox: {
-          className: "my-1 rounded-xl bg-[#7498c2]",
-        },
-      }}
-    ></BaseSelect>
+    <div className="input-rmm w-full">
+      <BaseSelect
+        ref={ref}
+        {...props}
+        slots={{
+          root: SelectButton,
+        }}
+        slotProps={{
+          listbox: {
+            className: "my-1 rounded-xl bg-[#7498c2]",
+          },
+        }}
+      ></BaseSelect>
     </div>
   );
 });

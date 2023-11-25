@@ -14,11 +14,19 @@ import { Skeleton } from "@mui/material";
 // import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 // import RefreshIcon from "@mui/icons-material/Refresh";
 import SendIcon from "@mui/icons-material/Send";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 import io from "socket.io-client";
 
 import Logo from "../components/Logo";
-import { Modal, IconButton, Input, Select, Option } from "../components/CoreUI";
+import {
+  Modal,
+  IconButton,
+  Input,
+  Select,
+  Slider,
+  Option,
+} from "../components/CoreUI";
 
 import promptList from "../components/_promptList";
 
@@ -39,25 +47,6 @@ const editorModules = {
     container: [[{ header: [1, 2, 3, false] }, "bold", "italic", "underline"]],
   },
 };
-
-function ReasonModal({ reason, ...props }) {
-  const Backdrop = () => {
-    return (
-      <div
-        className="fixed inset-0 w-screen h-screen bg-black/25"
-        onClick={props.onClose} // Temp-fix: modal not closing on backdrop click TODO
-      ></div>
-    );
-  };
-
-  return (
-    <Modal {...props} slots={{ backdrop: Backdrop }}>
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/3 p-2 rounded-xl bg-cool-white">
-        <p className="color-dark">{reason}</p>
-      </div>
-    </Modal>
-  );
-}
 
 function ActionDropdown({ optionList, handleSelect, ...props }) {
   const options = [];
@@ -141,10 +130,10 @@ function GradeWidget() {
             ) : (
               <></>
             )}
-            <ReasonModal
+            <Modal
               open={isOpen}
               onClose={handleClose}
-              modalText={reason}
+              children={<p className="color-dark">{reason}</p>}
             />
           </>
         ) : (
@@ -177,6 +166,9 @@ function Chat() {
   const [dropdownValue, setDropdownValue] = useState(null);
   const [isInputDisabled, disableInput] = useState(true);
   const [input, setInput] = useState(null);
+  const [isConfigOpen, toggleConfigBox] = useState(false);
+  const [temperature, setTemperature] = useState(0.1);
+  const [topP, setTopP] = useState(0.7);
   const ref = useRef(null);
   const { editorRef, selection, router } = useContext(Context);
 
@@ -270,7 +262,11 @@ function Chat() {
 
     // 문학 아이디어가 아닐 경우 GPT 사용
     if (dropdownValue === "idea") {
-      socket.emit("tutorReq", prompt);
+      socket.emit("tutorReq", {
+        prompt: prompt,
+        temperature: temperature,
+        top_p: topP,
+      });
     } else {
       socket.emit("gptTutorReq", prompt);
     }
@@ -301,19 +297,55 @@ function Chat() {
             />
           </IconButton>
         </div>
-        <ActionDropdown
-          optionList={[
-            { label: "문학 아이디어", value: "idea", emphasis: true },
-            { label: "이어 작성하기", value: "complete" },
-            { label: "문법 교정하기", value: "fix" },
-            { label: "논증 완성하기", value: "completeArg" },
-            { label: "다시 작성하기", value: "paraphrase" },
-            { label: "한 줄 요약하기", value: "summarize" },
-          ]}
-          handleSelect={generatePrompt}
-          onChange={(_, n) => setDropdownValue(n)}
-          value={dropdownValue}
-          placeholder="AI로..."
+        <div className="flex items-center w-full">
+          <ActionDropdown
+            optionList={[
+              { label: "문학 아이디어", value: "idea", emphasis: true },
+              { label: "이어 작성하기", value: "complete" },
+              { label: "문법 교정하기", value: "fix" },
+              { label: "논증 완성하기", value: "completeArg" },
+              { label: "다시 작성하기", value: "paraphrase" },
+              { label: "한 줄 요약하기", value: "summarize" },
+            ]}
+            handleSelect={generatePrompt}
+            onChange={(_, n) => setDropdownValue(n)}
+            value={dropdownValue}
+            placeholder="AI로..."
+          />
+          <IconButton onClick={() => toggleConfigBox(true)}>
+            <SettingsIcon htmlColor="#394867" className="text-3xl" />
+          </IconButton>
+        </div>
+        <Modal
+          open={isConfigOpen}
+          onClose={() => toggleConfigBox(false)}
+          children={
+            <>
+              <h1 className="text-2xl color-dark font-bold">
+                프롬프트 상세 설정
+              </h1>
+              <h3 className="color-dark">temperature</h3>
+              <div className="px-4 py-3">
+                <Slider
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={temperature}
+                  onChange={(_, value) => setTemperature(value)}
+                />
+              </div>
+              <h3 className="color-dark">top_p</h3>
+              <div className="px-4 py-3">
+                <Slider
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={topP}
+                  onChange={(_, value) => setTopP(value)}
+                />
+              </div>
+            </>
+          }
         />
       </div>
     </div>

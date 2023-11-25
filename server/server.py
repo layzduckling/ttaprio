@@ -29,15 +29,15 @@ CORS(app)
 
 async def fetch_ai_response(prompt):
     req = {
-        "prompt": prompt,
+        "prompt": prompt["prompt"],
         "max_new_tokens": 250,
         "auto_max_new_tokens": True,
         "max_tokens_second": 0,
                 
         "preset": "None",
         "do_sample": True,
-        "temperature": 0.7,
-        "top_p": 0.1,
+        "temperature": prompt["temperature"],
+        "top_p": prompt["top_p"],
         "typical_p": 1,
         "epsilon_cutoff": 0,
         "eta_cutoff": 0,
@@ -68,6 +68,8 @@ async def fetch_ai_response(prompt):
         "stopping_strings": []
     }
 
+    logging.info(req)
+
     async with websockets.connect(URI, ping_interval=None) as websocket:
         await websocket.send(json.dumps(req))
 
@@ -84,7 +86,7 @@ async def fetch_ai_response(prompt):
                     return response
 
 @socketio.on("tutorReq")
-def handle_improve(data):
+def handle_improve(data):  # Contains the prompt, the temperature value and the top_p value.
     logging.info("Connected")
     response = asyncio.run(fetch_ai_response(data))
     
@@ -139,5 +141,5 @@ def handle_eval(data):
 instruction = ""
 rubric = ""
 
-# if __name__ == "__main__":
-#     socketio.run(app, host="0.0.0.0", port=8080, debug=True)
+if __name__ == "__main__":
+    socketio.run(app, host="0.0.0.0", port=8080, debug=True)
