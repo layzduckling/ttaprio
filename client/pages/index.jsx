@@ -13,7 +13,7 @@ function SelectionTry() {
         따라해보기
       </h2>
       <p className="text-2xl font-base tracking-tight">
-        30초 안에 수행평가 유형 클릭하고 과제물 제작
+        따라하는 프롬프트 도우미로 학습 효율성 증가
       </p>
       <Link href="config-test">
         <div className="flex justify-center items-center gap-4 w-2/3 p-4 rounded-2xl text-3xl text-center font-semibold bg-dark hover:bg-slate-900 hover:duration-100">
