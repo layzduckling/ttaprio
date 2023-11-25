@@ -75,10 +75,10 @@ function Selection({
   }
 
   const buttonStyle =
-    "px-6 py-[2px] rounded-xl bg-dark color-cool-white text-2xl font-bold";
+    "px-6 py-[2px] color-cool-white text-2xl font-bold";
 
   return additionalSelect ? (
-    <Menu title={selectionText} baseStyle={buttonStyle}>
+    <Menu title={selectionText} baseStyle={buttonStyle + " rounded-xl bg-dark"}>
       {additionalOptions.map((option) => (
         <MenuItem
           className="px-2 py-1 rounded-lg hover:bg-[#91c8E4] hover:duration-100"
@@ -107,8 +107,10 @@ function Selection({
           setProgress
         )
       }
+      disabled={selectionText.startsWith("!")}
+      className="rounded-xl bg-dark disabled:bg-slate-500"
     >
-      <div className={buttonStyle}>{selectionText}</div>
+      <div className={buttonStyle}>{selectionText.slice(1)}</div>
     </button>
   );
 }
@@ -146,14 +148,14 @@ function SelectSubject() {
       <SubHeader>따플이가 자료를 준비할 수 있게 도와주세요.</SubHeader>
       <SelectionList
         selections={[
-          "국어",
-          "영어",
-          "사회",
-          "제2외국어",
-          "수학",
-          "과학",
-          "역사",
-          "도덕",
+          " 국어",
+          "!영어",
+          "!사회",
+          "!제2외국어",
+          "!수학",
+          "!과학",
+          "!역사",
+          "!도덕",
         ]}
       />
     </>
@@ -168,10 +170,6 @@ function SelectType() {
       <SubHeader>따플이가 마음의 준비를 할 수 있게 도와주세요.</SubHeader>
       <SelectionList
         selections={[
-          "보고서",
-          "발표",
-          "일기",
-          "암기형",
           {
             설명문: [
               "철학",
@@ -188,9 +186,13 @@ function SelectType() {
               "행정법",
             ],
           },
-          "수필",
-          "논설문",
-          { 편지: ["안부", "사과", "축하", "감사", "위문"] }
+          { 편지: ["안부", "사과", "축하", "감사", "위문"] },
+          "!보고서",
+          "!발표",
+          "!일기",
+          "!암기형",
+          "!수필",
+          "!논설문",
         ]}
       />
     </>
