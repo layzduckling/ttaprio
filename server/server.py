@@ -88,7 +88,19 @@ async def fetch_ai_response(prompt):
 @socketio.on("tutorReq")
 def handle_improve(data):  # Contains the prompt, the temperature value and the top_p value.
     logging.info("Connected")
-    response = asyncio.run(fetch_ai_response(data))
+    try:
+        response = asyncio.run(fetch_ai_response(data))
+    except websockets.exceptions.InvalidURI: 
+        logging.info("Model connection error. Falling back...")
+        raw_res = gpt_client.chat.completions.create(
+            messages=[{
+                "role": "user",
+                "content": data["prompt"],
+            }],
+            model="gpt-4",
+        )
+
+        response = raw_res.choices[0].message.content
     
     emit("tutorRes", response)
 
@@ -101,7 +113,7 @@ def gpt_handle_improve(data):
             "role": "user",
             "content": data,
         }],
-        model="gpt-4",
+        model="gpt-4-32k",
     )
 
     response = raw_res.choices[0].message.content
