@@ -221,7 +221,10 @@ function Chat() {
     const config = router.query;
 
     const prompts = {
-      idea: `너는 현재 ${config.format}를 쓰는 학생이야. 학생의 입장으로 ${
+      idea: `학년: ${config.schoolType} ${config.semester} / 수행평가 제목: ${
+        config.title
+      }
+너는 현재 ${config.format}를 쓰는 학생이야. 학생의 입장으로 ${
         config.format
       }의 문학 아이디어를 만들어야 해. 아래에 너가 할일, 평가를 받는 성취기준, 문장 생성형식, 원문내용을 규정해줄거야. 원문내용의 내용을 그대로 유지하고, 내용을 추론해서 문학 아이디어를 만들면 돼.
 
@@ -235,11 +238,84 @@ function Chat() {
 원문내용 : ${text}
       
 원문내용을 성취기준을 참고하여 문장생성형식에 맞춰서 할일을 수행해줘. 문장생성형식에 ___칸을 채우는 방법으로 진행해줘. 다른 안내 없이 바로 이어 써 주어야해.`,
-      complete: `${text}\n본문 뒤에 내용을 추론해서 이어 작성해줘.`,
-      fix: `${text}\n본문의 내용을 해치지 않는 선에게 어색한 표현을 고쳐줘.`,
-      completeArg: `${text}\n이 주제에 대해서 주장1문단 근거2문단 결과1문단으로 글을 써줘.`,
-      paraphrase: `${text}\n위에 내용에서 단어의 표현을 바꿔서 짜임새 있게 새로 작성해줘.`,
-      summarize: `${text}\n위에 있는 본문을 한줄로 요약해줘.`,
+
+      complete: `학년: ${config.schoolType} ${
+        config.semester
+      } / 수행평가 제목: ${config.title}
+너는 현재 ${config.format}를 쓰는 학생이야. 학생의 입장으로 ${
+        config.format
+      }의 본문 뒤에 내용을 추론해서 이어 작성해야 해. 아래에 너가 할일, 평가를 받는 성취기준, 문장 생성형식, 원문내용을 규정해줄거야. 원문내용의 내용을 그대로 유지하고, 본문 뒤에 내용을 추론해서 이어 작성해주면 돼.
+
+할일 : 너는 ${config.format}의 본문 뒤에 내용을 추론해서 이어 작성해줘.
+성취기준 : ${config.rubric}
+문장생성형식 : ${promptList[config.format]}
+원문내용 : ${text}
+      
+원문내용을 성취기준을 참고하여 문장생성형식에 맞춰서 할일을 수행해줘. 문장생성형식에 ___칸을 채우는 방법으로 진행해줘. 다른 안내 없이 바로 이어 써 주어야해.`,
+
+      fix: `학년: ${config.schoolType} ${config.semester} / 수행평가 제목: ${
+        config.title
+      }
+너는 현재 ${config.format}를 쓰는 학생이야. 학생의 입장으로 ${
+        config.format
+      }의 본문의 내용을 해치지 않는 선에서 어색한 표현을 고쳐야 해. 아래에 너가 할일, 평가를 받는 성취기준, 문장 생성형식, 원문내용을 규정해줄거야. 원문내용의 내용을 그대로 유지하고, 본문의 내용을 해치지 않는 선에서 어색한 표현을 고쳐줘.
+
+할일 : 너는 ${
+        config.format
+      }의 본문의 내용을 해치지 않는 선에서 어색한 표현을 고쳐줘.
+성취기준 : ${config.rubric}
+문장생성형식 : ${promptList[config.format]}
+원문내용 : ${text}
+      
+원문내용을 성취기준을 참고하여 문장생성형식에 맞춰서 할일을 수행해줘. 문장생성형식에 ___칸을 채우는 방법으로 진행해줘. 다른 안내 없이 바로 이어 써 주어야해.`,
+
+      completeArg: `학년: ${config.schoolType} ${config.semester} / 수행평가 제목: ${
+        config.title
+      }
+너는 현재 ${config.format}를 쓰는 학생이야. 학생의 입장으로 ${
+        config.format
+      }의 주장1문단 근거2문단 결과1문단을 써야 해. 아래에 너가 할일, 평가를 받는 성취기준, 문장 생성형식, 원문내용을 규정해줄거야. 원문내용의 내용을 그대로 유지하고, 주제에 대해서 주장1문단 근거2문단 결과1문단으로 글을 써주면 돼.
+
+할일 : 너는 ${
+        config.format
+      }의 주장1문단 근거2문단 결과1문단을 써야 해.
+성취기준 : ${config.rubric}
+문장생성형식 : ${promptList[config.format]}
+원문내용 : ${text}
+      
+원문내용을 성취기준을 참고하여 문장생성형식에 맞춰서 할일을 수행해줘. 문장생성형식에 ___칸을 채우는 방법으로 진행해줘. 다른 안내 없이 바로 이어 써 주어야해.`,
+
+      paraphrase: `학년: ${config.schoolType} ${config.semester} / 수행평가 제목: ${
+        config.title
+      }
+너는 현재 ${config.format}를 쓰는 학생이야. 학생의 입장으로 ${
+        config.format
+      }의 단어의 표현을 바꿔서 짜임새 있게 새로 작성해야 해. 아래에 너가 할일, 평가를 받는 성취기준, 문장 생성형식, 원문내용을 규정해줄거야. 원문내용의 내용을 그대로 유지하고, 내용에서 단어의 표현을 바꿔서 짜임새 있게 새로 작성해주면 돼.
+
+할일 : 너는 ${
+        config.format
+      }의 내용에서 단어의 표현을 바꿔서 짜임새 있게 새로 작성해야 해.
+성취기준 : ${config.rubric}
+문장생성형식 : ${promptList[config.format]}
+원문내용 : ${text}
+      
+원문내용을 성취기준을 참고하여 문장생성형식에 맞춰서 할일을 수행해줘. 문장생성형식에 ___칸을 채우는 방법으로 진행해줘. 다른 안내 없이 바로 이어 써 주어야해.`,
+
+      summarize: `학년: ${config.schoolType} ${config.semester} / 수행평가 제목: ${
+        config.title
+      }
+너는 현재 ${config.format}를 쓰는 학생이야. 학생의 입장으로 ${
+        config.format
+      }의 본문을 한줄로 요약해줘. 아래에 너가 할일, 평가를 받는 성취기준, 문장 생성형식, 원문내용을 규정해줄거야. 원문내용의 내용을 그대로 유지하고, 본문을 한줄로 요약해주면 돼.
+
+할일 : 너는 ${
+        config.format
+      }의 본문을 한줄로 요약해면 돼.
+성취기준 : ${config.rubric}
+문장생성형식 : ${promptList[config.format]}
+원문내용 : ${text}
+      
+원문내용을 성취기준을 참고하여 문장생성형식에 맞춰서 할일을 수행해줘. 문장생성형식에 ___칸을 채우는 방법으로 진행해줘. 다른 안내 없이 바로 이어 써 주어야해.`,
     };
 
     updateInputBox(prompts[type]);
