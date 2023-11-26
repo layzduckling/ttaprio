@@ -151,7 +151,6 @@ function SelectSubject() {
           " 국어",
           "!영어",
           "!사회",
-          "!제2외국어",
           "!수학",
           "!과학",
           "!역사",
@@ -216,6 +215,7 @@ function AdditionalInfo() {
     groupedOptions,
   } = useAutocomplete({
     options: rubricList,
+    onChange: (_, value) => setRubric(value)
   });
 
   useEffect(() => {
@@ -259,8 +259,6 @@ function AdditionalInfo() {
           <div {...getRootProps()} className="flex gap-5" ref={setAnchorEl}>
             <Input
               placeholder="성취 기준"
-              onChange={(e) => setRubric(e.target.value)}
-              value={rubric}
               {...getInputProps()}
             />
             <Popper
