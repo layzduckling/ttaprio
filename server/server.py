@@ -92,8 +92,17 @@ def handle_improve(data):  # Contains the prompt, the temperature value and the 
         response = asyncio.run(fetch_ai_response(data))
     except websockets.exceptions.InvalidURI: 
         logging.info("Model connection error. Falling back...")
+
+        with open("koreanlang.txt", "r", encoding="utf-8") as file:
+            korean_lang_context = file.read()
+
         raw_res = gpt_client.chat.completions.create(
-            messages=[{
+            messages=[
+            {
+                "role": "system",
+                "content": f"너는 이제부터 수행평가 형식과 기준에 맞추어 알맞은 수행평가 과제물을 작성해야 해. 반드시 이 작품들을 참고해서 답안을 작성해줘. {korean_lang_context}"
+            },
+            {
                 "role": "user",
                 "content": data["prompt"],
             }],
@@ -113,7 +122,7 @@ def gpt_handle_improve(data):
             "role": "user",
             "content": data,
         }],
-        model="gpt-4-32k",
+        model="gpt-4",
     )
 
     response = raw_res.choices[0].message.content
